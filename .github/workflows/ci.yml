@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  repo-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          test -f README.md
+          test -f docs/architecture.md
+          test -f .editorconfig
+          test -f .gitignore
+
+      - name: Check markdown headings
+        run: |
+          grep -q '^# ' README.md
+          grep -q '^# ' docs/architecture.md
+          grep -q '^# ' src/README.md
+          grep -q '^# ' tests/README.md
