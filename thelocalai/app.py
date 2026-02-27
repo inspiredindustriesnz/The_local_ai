@@ -63,6 +63,7 @@ class TheLocalAIApp:
         self.chat.write(f"* Default model: {DEFAULT_MODEL}", "system")
         self.chat.write("* Commands: web: <query> | learn: <topic> | kb: <query> | kbclear", "system")
         self.chat.write("* Extra: type `about` or `memorytopics`", "system")
+        self.chat.write("* You can ask about local files/structure (e.g., `where is voice code?`).", "system")
         self.chat.write("* Enter to send. Shift+Enter for new line.", "system")
         self.chat.write("* Tip: You can select + copy chat text now (Ctrl+C).", "system")
 

@@ -148,6 +148,7 @@ def build_prompt(
     user_msg: str,
     kb_material: str = "",
     web_context: str = "",
+    project_context: str = "",
     last_topic: str = "",
     web_used: bool = False,
 ) -> str:
@@ -163,6 +164,7 @@ def build_prompt(
         "- If asked who trained the model, the dataset size, the disk size of training data, or the training cutoff date: say you DO NOT know unless the user provides it.",
         "- Never claim you are trained by Google/OpenAI/etc unless the user provided that fact.",
         "- Do not invent URLs, sources, reports, or 'local news'.",
+        "- If PROJECT CONTEXT is provided, use it for file/structure questions and do not invent filenames.",
         "",
         f"WEB_USED: {'YES' if web_used else 'NO'}",
         "",
@@ -179,6 +181,8 @@ def build_prompt(
         parts.append("KB:\n" + kb_material + "\n")
     if web_context.strip():
         parts.append("WEB CONTEXT:\n" + web_context + "\n")
+    if project_context.strip():
+        parts.append("PROJECT CONTEXT:\n" + project_context + "\n")
 
     parts.append("USER:\n" + user_msg.strip())
     parts.append("\nASSISTANT:")
