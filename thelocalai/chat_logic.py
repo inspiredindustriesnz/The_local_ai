@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from .config import ABOUT_TEXT, WEB_ENABLED, WEB_MAX_PAGES_TO_READ, WEB_MAX_RESULTS
 from .db import extract_memory, get_last_topic, kb_clear, list_memory_keys, load_memory_latest_per_key
 from .integrations import build_prompt, ddg_search, fetch_page_text_with_retries, ollama_generate
+from .project_context import build_project_context, should_include_project_context
 from .runtime import cap, is_blocked_url
 
 log = logging.getLogger("thelocalai")
@@ -41,6 +42,7 @@ def generate_reply(con: sqlite3.Connection, model: str, message: str, *, num_pre
 
     web_used = c in {"learn", "web"}
     web_context = ""
+    project_context = ""
 
     if c in {"learn", "web"}:
         if not WEB_ENABLED:
@@ -80,11 +82,15 @@ def generate_reply(con: sqlite3.Connection, model: str, message: str, *, num_pre
             lines.append("")
         web_context = "\n".join(lines).strip()
 
+    if should_include_project_context(message):
+        project_context = build_project_context(message)
+
     prompt = build_prompt(
         cap(memory, 6000),
         message,
         kb_material="",
         web_context=cap(web_context, 18000),
+        project_context=cap(project_context, 12000),
         last_topic=last_topic,
         web_used=web_used,
     )

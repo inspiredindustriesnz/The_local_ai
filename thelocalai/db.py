@@ -83,7 +83,7 @@ def load_memory_latest_per_key(con: sqlite3.Connection) -> str:
 
 
 def list_memory_keys(con: sqlite3.Connection) -> List[str]:
-    rows = con.execute("SELECT DISTINCT key FROM memory WHERE key NOT LIKE '__%' ORDER BY key ASC").fetchall()
+    rows = con.execute("SELECT DISTINCT key FROM memory WHERE substr(key, 1, 2) != '__' ORDER BY key ASC").fetchall()
     return [r[0] for r in rows if r and r[0]]
 
 
